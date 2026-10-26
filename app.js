@@ -48,7 +48,7 @@ function sendMockOtp(){toast('Demo OTP: 123456 (no SMS is sent).')}function veri
 function adminLogin(e){if(e)e.preventDefault();const pin=$('admin-pin')?.value;if(pin==='admin123'){if($('admin-login-box'))$('admin-login-box').style.display='none';if($('admin-dashboard'))$('admin-dashboard').style.display='block';refreshAdminDashboard();toast('Operator demo portal opened.')}else toast('Incorrect PIN. Use demo PIN admin123.');return false}function adminLogout(){if($('admin-login-box'))$('admin-login-box').style.display='block';if($('admin-dashboard'))$('admin-dashboard').style.display='none'}function refreshAdminDashboard(){if($('stat-total-buses'))$('stat-total-buses').textContent=buses.length;if($('stat-total-tickets'))$('stat-total-tickets').textContent=bookings.length;if($('stat-occupancy'))$('stat-occupancy').textContent=Math.min(100,Math.round(bookings.length/Math.max(1,buses.length*24)*100))+'%';if($('stat-total-revenue'))$('stat-total-revenue').textContent=money(bookings.reduce((s,b)=>s+(b.fare||0),0));if($('admin-bookings-tbody'))$('admin-bookings-tbody').innerHTML=bookings.length?bookings.map(b=>`<tr><td>${b.pnr}</td><td>${b.bus}</td><td>${b.from} → ${b.to}</td><td>${b.seat}</td><td>${money(b.fare)}</td></tr>`).join(''):'<tr><td colspan="5">No demo bookings yet.</td></tr>'}
 function openAddBusModal(){showModal('add-bus-modal')}function closeAddBusModal(){hideModal('add-bus-modal')}function closeBusProfileModal(){hideModal('bus-profile-modal')}
 function toggleAddon(name,price){if(addons[name])delete addons[name];else addons[name]=price;const total=(selectedBus?.price||0)+Object.values(addons).reduce((a,b)=>a+b,0);if($('seat-total'))$('seat-total').textContent=money(total);toast((addons[name]?'Added ':'Removed ')+name+' add-on')}
-function selectUpiApp(app){window.selectedUpi=app;document.querySelectorAll('[data-upi]').forEach(x=>x.classList.toggle('active',x.dataset.upi===app));toast('Selected '+app.toUpperCase()+' demo payment option.')}
+function selectUpiApp(app){window.selectedUpi=app;document.querySelectorAll('.upi-app-card').forEach(x=>x.classList.toggle('active',x.id==='upi-'+app));toast('Selected '+app.toUpperCase()+' demo payment option.')}
 function initSmartBus(){const date=$('search-date');if(date){const d=new Date();date.min=d.toISOString().slice(0,10);if(!date.value)date.value=date.min}if($('nav-wallet-balance'))$('nav-wallet-balance').textContent=money(wallet);renderBuses();refreshAdminDashboard();document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('open');m.style.display='none'}}));document.querySelectorAll('form').forEach(f=>{if(f.id==='price-drop-form')f.addEventListener('submit',e=>{e.preventDefault();closePriceDropModal();toast('Price alert saved in this demo only.')})})}
 document.addEventListener('DOMContentLoaded',initSmartBus);
 
@@ -115,3 +115,31 @@ function executeUpiPayment(){
   hideModal('checkout-modal'); showModal('ticket-modal'); refreshAdminDashboard(); toast('Demo booking confirmed! PNR: '+pnr);
 }
 function toggleAddon(name,price){if(addons[name])delete addons[name];else addons[name]=price;updateFareSummary();toast((addons[name]?'Added ':'Removed ')+name+' add-on');}
+
+
+/* Missing handlers used by buttons/forms in index.html */
+function handleAddNewBus(e){
+  if(e)e.preventDefault();
+  const name=$('new-bus-name')?.value.trim();
+  const from=$('new-bus-src')?.value.trim();
+  const to=$('new-bus-dest')?.value.trim();
+  const depart=$('new-bus-dep')?.value.trim();
+  const arrive=$('new-bus-arr')?.value.trim();
+  const type=$('new-bus-type')?.value||'AC Volvo';
+  const price=Number($('new-bus-fare')?.value||0);
+  if(!name||!from||!to||!depart||!arrive||price<=0){toast('Please complete all bus details.');return false;}
+  const id=Math.max(0,...buses.map(b=>Number(b.id)||0))+1;
+  buses.push({id,name,type,from,to,depart,arrive,price,seats:24,rating:4.5,comfort:4,women:false,speed:2});
+  renderBuses();refreshAdminDashboard();
+  e?.target?.reset();closeAddBusModal();toast('New demo bus route added.');return false;
+}
+function subscribePriceDropAlert(e){
+  if(e)e.preventDefault();
+  const fare=Number($('price-drop-target-fare')?.value||0);
+  const contact=$('price-drop-contact-input')?.value.trim();
+  if(!fare||!contact){toast('Enter a target fare and contact.');return false;}
+  const alerts=JSON.parse(localStorage.getItem('smartbusPriceAlerts')||'[]');
+  alerts.push({fare,contact,route:$('price-drop-route-title')?.textContent||'',createdAt:new Date().toISOString()});
+  localStorage.setItem('smartbusPriceAlerts',JSON.stringify(alerts));
+  closePriceDropModal();toast('Demo price alert saved in this browser. No message will be sent.');return false;
+}
