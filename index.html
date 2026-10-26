@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartBus Go - Next-Gen Luxury Bus Booking &amp; Passenger Safety</title>
+  <!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Luxury Gold Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="announcement-content">
+      <span id="announcement-text">
+        <i class="fa-solid fa-crown text-gold"></i>
+        <strong>On-Time Guarantee:</strong> Arrive on-time or get an automatic ₹100 wallet credit! All-In transparent pricing with zero surprise fees.
+      </span>
+      <div class="announcement-badges-wrap">
+        <!-- Phase 3: Multilingual Language Switcher -->
+        <div class="lang-selector-group" title="Select Website Language">
+          <button type="button" class="lang-btn active" id="lang-en" onclick="changeLanguage('en')">EN</button>
+          <button type="button" class="lang-btn" id="lang-hi" onclick="changeLanguage('hi')">हिंदी</button>
+          <button type="button" class="lang-btn" id="lang-mr" onclick="changeLanguage('mr')">मराठी</button>
+        </div>
+        <span class="announcement-badge"><i class="fa-solid fa-shield-halved text-gold"></i> 24x7 GPS Satellite Tracking</span>
+        <span class="announcement-badge"><i class="fa-solid fa-shield-heart" style="color: #fb7185;"></i> Women-Safe Fleet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo" onclick="switchTab('booking-tab')">
+        <div class="logo-icon-wrap">
+          <i class="fa-solid fa-bus-simple"></i>
+        </div>
+        <div class="logo-text">
+          <span>Smart<strong>Bus</strong></span>
+          <small class="tagline">LUXURY GOLD</small>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <button class="nav-btn active" id="btn-booking" onclick="switchTab('booking-tab')">
+          <i class="fa-solid fa-compass"></i> Explore Fleet
+        </button>
+        <button class="nav-btn" id="btn-pnr" onclick="switchTab('pnr-tab')">
+          <i class="fa-solid fa-receipt"></i> PNR Enquiry
+        </button>
+        <button class="nav-btn btn-admin-nav" id="btn-admin" onclick="switchTab('admin-tab')">
+          <i class="fa-solid fa-shield-halved"></i> Operator Portal
+        </button>
+
+        <!-- Phase 3: Royal Loyalty Tiers Badge -->
+        <button type="button" class="nav-loyalty-pill" onclick="openLoyaltyModal()" title="SmartBus Royal Loyalty Club & SmartCoins">
+          <i class="fa-solid fa-crown text-gold"></i>
+          <span id="nav-loyalty-tier">PLATINUM Royal</span>
+          <span class="loyalty-coin-badge"><i class="fa-solid fa-coins"></i> <span id="nav-loyalty-coins">250</span> Coins</span>
+        </button>
+
+        <!-- Phase 2: Wallet Credit Badge -->
+        <div class="nav-wallet-pill" title="SmartBus Gold Cash Wallet (Updated via On-Time Guarantee)">
+          <i class="fa-solid fa-wallet text-gold"></i>
+          <span>Wallet: <strong id="nav-wallet-balance">₹0</strong></span>
+        </div>
+
+        <!-- Phase 2: Persistent Emergency SOS Button -->
+        <button class="nav-btn nav-sos-btn" onclick="openSosModal()" title="Emergency SOS Rapid Assist">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>SOS Assist</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ================= TAB 1: PASSENGER BOOKING & EXPLORE ================= -->
+  <main id="booking-tab" class="tab-content active">
+    <!-- Hero Banner with Ambient Gold & Navy Glow -->
+    <section class="hero-section">
+      <div class="hero-ambient-glow glow-gold"></div>
+      <div class="hero-ambient-glow glow-navy"></div>
+
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fa-solid fa-certificate text-gold"></i> Live Satellite Telemetry &amp; On-Time Guarantee Protected
+        </div>
+        <h1 id="hero-main-title">Travel in Ultimate Elegance &amp; Uncompromised Safety</h1>
+        <p id="hero-main-p">Book premium Volvo multi-axle &amp; luxury sleepers with real-time GPS tracking, shareable live trip links, 3-tap UPI checkout, and on-time compensation.</p>
+      </div>
+
+      <!-- Floating Glassmorphic Search Card -->
+      <div class="search-card">
+        <form id="search-bus-form" onsubmit="handleBusSearch(event)">
+          <div class="input-card">
+            <span class="input-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <div class="input-details">
+              <label for="search-source" id="label-leaving-from">Leaving From</label>
+              <input type="text" id="search-source" placeholder="City or Terminal" value="Pune" required autocomplete="off">
+            </div>
+          </div>
+
+          <button type="button" class="swap-btn" onclick="swapLocations()" title="Swap Cities">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+          </button>
+
+          <div class="input-card">
+            <span class="input-icon"><i class="fa-solid fa-location-crosshairs"></i></span>
+            <div class="input-details">
+              <label for="search-destination" id="label-going-to">Going To</label>
+              <input type="text" id="search-destination" placeholder="City or Terminal" value="Mumbai" required autocomplete="off">
+            </div>
+          </div>
+
+          <div class="input-card">
+            <span class="input-icon"><i class="fa-regular fa-calendar-check"></i></span>
+            <div class="input-details">
+              <label for="search-date" id="label-travel-date">Travel Date</label>
+              <input type="date" id="search-date" required>
+            </div>
+          </div>
+
+          <button type="submit" class="search-btn">
+            <span id="btn-search-fleet-text">Search Fleet</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- Popular Route Pills -->
+        <div class="popular-routes-bar">
+          <span class="routes-label"><i class="fa-solid fa-fire text-gold"></i> Express Routes:</span>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Pune', 'Mumbai')">Pune ➔ Mumbai</button>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Mumbai', 'Goa')">Mumbai ➔ Goa</button>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Delhi', 'Manali')">Delhi ➔ Manali</button>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Bangalore', 'Hyderabad')">Bangalore ➔ Hyderabad</button>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Bangalore', 'Chennai')">Bangalore ➔ Chennai</button>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Delhi', 'Jaipur')">Delhi ➔ Jaipur (Delay Demo)</button>
+          <button type="button" class="route-chip" onclick="quickFillRoute('Mumbai', 'Ahmedabad')">Mumbai ➔ Ahmedabad</button>
+        </div>
+      </div>
+
+      <!-- Phase 3: Natural Language AI Trip Assistant -->
+      <div class="ai-assistant-banner">
+        <div class="ai-banner-header">
+          <div class="ai-badge-row">
+            <span class="ai-sparkle-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> AI TRIP ASSISTANT</span>
+            <span class="ai-live-tag"><span class="pulse-dot"></span> Smart NLP Query Engine</span>
+          </div>
+          <p class="ai-banner-desc">Describe your trip naturally &mdash; e.g. budget, bus type, date, or destination:</p>
+        </div>
+
+        <div class="ai-input-wrap">
+          <div class="ai-input-inner">
+            <i class="fa-solid fa-brain ai-prefix-icon text-gold"></i>
+            <input type="text" id="ai-trip-query-input" placeholder='Try: "Pune to Goa Friday night, sleeper, under ₹1500" or "Fastest AC Volvo to Hyderabad"' onkeydown="if(event.key==='Enter'){handleAiTripSearch();}">
+          </div>
+          <button type="button" class="btn-ai-search" onclick="handleAiTripSearch()">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Ask AI</span>
+          </button>
+        </div>
+
+        <div class="ai-quick-prompts">
+          <span class="prompts-label"><i class="fa-solid fa-lightbulb text-gold"></i> Try Prompts:</span>
+          <button type="button" class="ai-chip" onclick="quickAiPrompt('Pune to Goa sleeper under ₹1500')">✨ Pune to Goa sleeper under ₹1500</button>
+          <button type="button" class="ai-chip" onclick="quickAiPrompt('Fastest AC Volvo Mumbai to Pune')">⚡ Fastest AC Volvo Mumbai to Pune</button>
+          <button type="button" class="ai-chip" onclick="quickAiPrompt('Bangalore to Hyderabad under ₹1000')">💎 Bangalore to Hyderabad under ₹1000</button>
+          <button type="button" class="ai-chip" onclick="quickAiPrompt('Delhi to Manali luxury sleeper')">🏔️ Delhi to Manali luxury sleeper</button>
+        </div>
+
+        <div id="ai-response-card" class="ai-response-card" style="display: none;"></div>
+      </div>
+    </section>
+
+    <!-- Phase 2 Safety Highlights Banner -->
+    <section class="trust-banner">
+      <div class="trust-item">
+        <div class="trust-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+        <div>
+          <h4>Live Satellite Tracking</h4>
+          <p>Real-time vehicle telemetry, live speed &amp; dynamic ETA countdown</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><i class="fa-brands fa-whatsapp"></i></div>
+        <div>
+          <h4>Shareable Family Trip Link</h4>
+          <p>1-Click WhatsApp share to keep loved ones informed in real-time</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><i class="fa-solid fa-award"></i></div>
+        <div>
+          <h4>On-Time Guarantee</h4>
+          <p>₹100 automatic wallet credit if coach arrival is delayed by &gt; 30 mins</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div>
+          <h4>24/7 Rapid SOS Protocol</h4>
+          <p>1-Tap Police 112 dispatch &amp; Women Safety emergency escalation</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bus Results & Smart Sort Controls -->
+    <section class="bus-results-section">
+      <!-- Smart Sorting Header Card -->
+      <div class="results-header-card">
+        <div class="results-title-group">
+          <div class="results-header-actions-row">
+            <div class="all-in-guarantee-pill">
+              <i class="fa-solid fa-certificate"></i> ZERO HIDDEN SURCHARGES • ON-TIME GUARANTEE PROTECTED
+            </div>
+            <!-- Phase 3: Set Price-Drop Alert Button -->
+            <button type="button" class="btn-price-drop-trigger" onclick="openPriceDropModal()" title="Get alerted when route fare drops">
+              <i class="fa-solid fa-bell text-gold"></i>
+              <span>Track Price Drops</span>
+            </button>
+          </div>
+          <h2 id="search-results-heading">Verified Luxury Coaches</h2>
+          <p id="search-results-subheading" class="subtext">Browse comfortable coaches matching your journey</p>
+        </div>
+
+        <!-- Smart Sort Mode Pills -->
+        <div class="smart-sort-bar">
+          <span class="sort-label"><i class="fa-solid fa-arrow-up-wide-short text-gold"></i> Smart Sort:</span>
+          <button type="button" class="sort-chip active" id="sort-default" onclick="setSmartSort('DEFAULT')">All Coaches</button>
+          <button type="button" class="sort-chip" id="sort-comfort" onclick="setSmartSort('COMFORT')">👑 Most Comfortable</button>
+          <button type="button" class="sort-chip" id="sort-value" onclick="setSmartSort('VALUE')">🏷️ Best Value</button>
+          <button type="button" class="sort-chip" id="sort-fastest" onclick="setSmartSort('FASTEST')">⚡ Fastest</button>
+          <button type="button" class="sort-chip" id="sort-women_friendly" onclick="setSmartSort('WOMEN_FRIENDLY')">🌸 Women-Friendly</button>
+        </div>
+
+        <!-- Filter Dropdowns -->
+        <div class="filters-bar">
+          <div class="filter-group">
+            <label><i class="fa-solid fa-filter"></i> Coach Type:</label>
+            <select id="filter-type" onchange="renderBuses()">
+              <option value="ALL">All Classes</option>
+              <option value="AC Volvo">AC Volvo</option>
+              <option value="AC Sleeper">AC Sleeper</option>
+              <option value="Multi-Axle AC">Multi-Axle AC</option>
+              <option value="Non-AC Seater">Non-AC Seater</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label><i class="fa-solid fa-arrow-down-short-wide"></i> Price Sort:</label>
+            <select id="sort-price" onchange="renderBuses()">
+              <option value="DEFAULT">Recommended</option>
+              <option value="LOW_HIGH">Price: Low to High</option>
+              <option value="HIGH_LOW">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bus Cards Container -->
+      <div id="bus-cards-container" class="bus-cards-container">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= TAB 2: PNR ENQUIRY & CANCELLATION ================= -->
+  <main id="pnr-tab" class="tab-content">
+    <div class="pnr-wrapper">
+      <div class="pnr-search-card">
+        <div class="pnr-icon-badge"><i class="fa-solid fa-receipt"></i></div>
+        <h2>PNR Status, Live Tracking &amp; On-Time Compensation</h2>
+        <p>Check verified boarding pass status, track coach GPS in real-time, share trip links with family, or claim your ₹100 On-Time Guarantee compensation.</p>
+
+        <form onsubmit="searchPNR(event)" class="pnr-form">
+          <div class="pnr-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="pnr-input" placeholder="e.g. PNR-108422 or PNR-108423" required autocomplete="off">
+          </div>
+          <button type="submit" class="pnr-btn">
+            <span>Check Ticket</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </form>
+
+        <div class="pnr-helper-hint">
+          <i class="fa-solid fa-award text-gold"></i> <strong>Pro-Tip:</strong> Try checking <code>PNR-108423</code> to test the <strong>₹100 On-Time Guarantee Wallet Credit claim</strong> for delayed coaches!
+        </div>
+      </div>
+
+      <!-- Search Result Box -->
+      <div id="pnr-result-box" class="pnr-result-box" style="display: none;"></div>
+    </div>
+  </main>
+
+  <!-- ================= TAB 3: OPERATOR ADMIN DASHBOARD ================= -->
+  <main id="admin-tab" class="tab-content">
+    <div class="admin-wrapper">
+      <!-- Admin Login Screen -->
+      <div class="admin-auth-card" id="admin-login-box">
+        <div class="auth-icon-circle">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2>Operator Control Center</h2>
+        <p>Enter administrative master PIN to manage fleet departures, monitor occupancy, and view passenger manifests.</p>
+        <form onsubmit="adminLogin(event)" class="admin-login-form">
+          <div class="form-group">
+            <label>Master Security PIN</label>
+            <div class="input-password-wrap">
+              <i class="fa-solid fa-key"></i>
+              <input type="password" id="admin-pin" placeholder="Enter PIN (Default: admin123)" required>
+            </div>
+            <small class="hint-pin">Development PIN: <code>admin123</code></small>
+          </div>
+          <button type="submit" class="btn-primary full-width">
+            <span>Access Portal</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Admin Live Operations Center -->
+      <div class="admin-dashboard" id="admin-dashboard" style="display: none;">
+        <div class="admin-header-panel">
+          <div>
+            <div class="admin-status-pill"><span class="pulse-dot"></span> Active Operations Dispatch</div>
+            <h2>Fleet Performance &amp; Manifest</h2>
+            <p>Real-time passenger bookings, seat occupancy telemetry, and revenue statistics</p>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-primary" onclick="openAddBusModal()">
+              <i class="fa-solid fa-plus-circle"></i> Add New Route
+            </button>
+            <button class="btn-outline" onclick="adminLogout()">
+              <i class="fa-solid fa-power-off"></i> Exit Portal
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Overview Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fa-solid fa-bus-simple"></i></div>
+            <div class="stat-details">
+              <h3 id="stat-total-buses">0</h3>
+              <p>Active Fleet Coaches</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-ticket"></i></div>
+            <div class="stat-details">
+              <h3 id="stat-total-tickets">0</h3>
+              <p>Confirmed Bookings</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-chart-pie"></i></div>
+            <div class="stat-details">
+              <h3 id="stat-occupancy">0%</h3>
+              <p>Fleet Occupancy Rate</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+            <div class="stat-details">
+              <h3 id="stat-total-revenue">₹0</h3>
+              <p>Gross Fare Revenue</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passenger Bookings Manifest Table -->
+        <div class="table-card">
+          <div class="table-header-row">
+            <div>
+              <h3>Real-Time Passenger Manifest</h3>
+              <p class="subtext">Active bookings across all fleet departures</p>
+            </div>
+            <button class="btn-outline btn-sm" onclick="refreshAdminDashboard()">
+              <i class="fa-solid fa-arrows-rotate"></i> Refresh Manifest
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>PNR Number</th>
+                  <th>Passenger</th>
+                  <th>Coach / Route</th>
+                  <th>Seat</th>
+                  <th>Category</th>
+                  <th>All-In Fare</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-bookings-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= PHASE 2 MODAL: LIVE GPS TRACKING & SHAREABLE TRIP ================= -->
+  <div id="tracking-modal" class="modal">
+    <div class="modal-content tracking-modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="tracking-live-badge-row">
+            <span id="track-status-pill" class="track-status-pill on-time">
+              <span class="pulse-dot"></span> On-Time Guaranteed • Live GPS
+            </span>
+            <span class="track-satellite-tag"><i class="fa-solid fa-satellite-dish"></i> GPS Satellite Sync</span>
+          </div>
+          <h3 id="track-bus-title">Bus Name</h3>
+          <p id="track-route-sub" class="subtext">Source ➔ Destination</p>
+        </div>
+        <button class="close-btn" onclick="closeTrackingModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="tracking-modal-body">
+        <!-- Live Route Radar Visualizer -->
+        <div class="route-radar-card">
+          <div class="radar-header">
+            <div>
+              <span class="radar-live-text"><i class="fa-solid fa-circle-dot live-blink-icon"></i> LIVE EXPRESSWAY TELEMETRY</span>
+              <h4 id="track-current-loc">Expressway Kilometer 84</h4>
+            </div>
+            <div class="speed-gauge-card">
+              <span class="speed-label">SPEED</span>
+              <strong id="track-live-speed" class="speed-num">68 km/h</strong>
+            </div>
+          </div>
+
+          <!-- Express Route Progress Bar with Moving Bus Marker -->
+          <div class="expressway-progress-container">
+            <div class="progress-track-line">
+              <div id="track-progress-fill" class="progress-fill-line" style="width: 55%;"></div>
+              <div id="track-vehicle-pin" class="vehicle-live-marker" style="left: 55%;">
+                <div class="marker-pulse-ring"></div>
+                <div class="marker-pulse-ring delay"></div>
+                <div class="marker-coach-icon"><i class="fa-solid fa-bus-simple"></i></div>
+              </div>
+            </div>
+            <div class="expressway-stops-row">
+              <span class="stop-node origin"><i class="fa-solid fa-play"></i> Departed</span>
+              <span class="stop-node midpoint"><i class="fa-solid fa-utensils"></i> Rest Stop (In 14m)</span>
+              <span class="stop-node destination"><i class="fa-solid fa-flag-checkered"></i> Destination</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry Data Cards Grid -->
+        <div class="telemetry-cards-grid">
+          <div class="telem-item">
+            <span class="telem-label"><i class="fa-solid fa-compass text-gold"></i> Coordinates</span>
+            <strong id="track-gps-coords">18.7542° N, 73.4062° E</strong>
+          </div>
+          <div class="telem-item">
+            <span class="telem-label"><i class="fa-solid fa-mug-hot text-gold"></i> Next Rest Stop</span>
+            <strong id="track-next-stop">Food Plaza Urse (in 18 km)</strong>
+          </div>
+          <div class="telem-item">
+            <span class="telem-label"><i class="fa-solid fa-user-shield text-gold"></i> Verified Bus Captain</span>
+            <strong id="track-driver-name">Captain Ramesh Pawar</strong>
+            <small id="track-driver-rating" style="color: #fbbf24;">4.9 ★ (12 yrs exp)</small>
+          </div>
+          <div class="telem-item action-call">
+            <button class="btn-call-captain" onclick="callDriverPrompt()">
+              <i class="fa-solid fa-phone"></i>
+              <span>Call Captain (<span id="track-driver-phone">+91 98230 11223</span>)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- On-Time Guarantee Compensation Trigger / Active Banner -->
+        <div id="track-ontime-guarantee-box"></div>
+
+        <!-- Shareable Trip Link Widget -->
+        <div class="share-trip-card">
+          <div class="share-header">
+            <div>
+              <h5><i class="fa-solid fa-share-nodes text-gold"></i> Share Live Location with Family</h5>
+              <p>Keep your family informed with real-time GPS tracking link and arrival ETA.</p>
+            </div>
+            <button class="btn-whatsapp-share" onclick="shareTripWhatsapp()">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Share
+            </button>
+          </div>
+          <div class="share-link-input-wrap">
+            <input type="text" id="track-share-url-input" readonly>
+            <button class="btn-copy-link" onclick="copyTripLink()">
+              <i class="fa-regular fa-copy"></i> Copy Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PHASE 2 MODAL: EMERGENCY SOS SAFETY SYSTEM ================= -->
+  <div id="sos-modal" class="modal">
+    <div class="modal-content sos-modal-content">
+      <div class="modal-header sos-header">
+        <div class="sos-header-title">
+          <div class="siren-pulse-badge"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div>
+            <h3>EMERGENCY SOS DISPATCH PROTOCOL</h3>
+            <p class="subtext" style="color: #fca5a5;">Immediate Police, Fleet Control &amp; Medical Escalation</p>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeSosModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="sos-modal-body">
+        <div class="sos-telemetry-badge">
+          <div><i class="fa-solid fa-bus text-gold"></i> Vehicle: <strong id="sos-bus-info">Coach BUS-101</strong></div>
+          <div><i class="fa-solid fa-location-dot text-gold"></i> Location: <strong id="sos-current-loc">Expressway Highway, Km 82</strong></div>
+          <div><i class="fa-solid fa-satellite text-gold"></i> Live GPS: <code id="sos-current-coords">18.7542° N, 73.4062° E</code></div>
+        </div>
+
+        <div class="emergency-dial-grid">
+          <!-- 112 National Police -->
+          <a href="tel:112" class="emergency-dial-btn police">
+            <div class="dial-icon"><i class="fa-solid fa-shield"></i></div>
+            <div>
+              <strong>112 Police &amp; Highway Patrol</strong>
+              <small>National Police Emergency Dispatch</small>
+            </div>
+          </a>
+
+          <!-- SmartBus 24/7 Command -->
+          <a href="tel:180076278287" class="emergency-dial-btn command">
+            <div class="dial-icon"><i class="fa-solid fa-headset"></i></div>
+            <div>
+              <strong>1800-SMARTBUS Command</strong>
+              <small>24x7 Fleet Safety Control Room</small>
+            </div>
+          </a>
+
+          <!-- Women Safety Helpline -->
+          <a href="tel:1091" class="emergency-dial-btn women">
+            <div class="dial-icon"><i class="fa-solid fa-shield-heart"></i></div>
+            <div>
+              <strong>1091 Women Safety Hotline</strong>
+              <small>Immediate Police Assistance for Women</small>
+            </div>
+          </a>
+        </div>
+
+        <!-- 1-Tap Location Broadcast to Contacts -->
+        <div class="sos-broadcast-box">
+          <button type="button" class="btn-sos-broadcast" id="btn-sos-broadcast" onclick="triggerEmergencyBroadcast()">
+            <i class="fa-solid fa-tower-broadcast"></i>
+            <span>Broadcast Satellite SOS to Emergency Contacts</span>
+          </button>
+          <p class="sos-disclaimer">Tapping this instantly transmits your satellite coordinates, bus registration number, and nearest police jurisdiction via high-priority SMS.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: DETAILED SEAT MAP & SEAT INSPECTOR ================= -->
+  <div id="seat-modal" class="modal">
+    <div class="modal-content seat-modal-content">
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <span class="modal-badge"><i class="fa-solid fa-couch text-gold"></i> Live Seat Selection</span>
+          <h3 id="modal-bus-title">Bus Name</h3>
+          <p id="modal-bus-route" class="subtext">Source ➔ Destination</p>
+        </div>
+        <button class="close-btn" onclick="closeSeatModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="seat-modal-body">
+        <!-- Left: Coach Interior Grid & Detailed Inspector Card -->
+        <div class="bus-interior-container">
+          <div class="coach-windshield">
+            <div class="coach-glass-reflection"></div>
+            <div class="dashboard-controls">
+              <span class="driver-wheel"><i class="fa-solid fa-dharmachakra"></i> Driver Cockpit</span>
+              <span class="door-indicator"><i class="fa-solid fa-door-open"></i> Front Entry Gate</span>
+            </div>
+          </div>
+
+          <!-- Dynamic 2x2 Grid -->
+          <div id="seat-layout-grid" class="seat-layout-grid"></div>
+
+          <!-- Seat Legend -->
+          <div class="seat-legend">
+            <div class="legend-item"><span class="seat-sample available"></span> Available</div>
+            <div class="legend-item"><span class="seat-sample selected"></span> Selected</div>
+            <div class="legend-item"><span class="seat-sample booked"></span> Occupied</div>
+          </div>
+
+          <!-- Real-Time Seat Photo & Specs Inspector Card -->
+          <div id="seat-inspector-card" class="seat-inspector-card"></div>
+        </div>
+
+        <!-- Right: Passenger Details & All-In Summary -->
+        <div class="booking-summary-panel">
+          <div class="panel-header">
+            <h4><i class="fa-solid fa-user-check text-gold"></i> Passenger Details &amp; Fare</h4>
+          </div>
+
+          <!-- Live Transparent Fare Card -->
+          <div class="fare-breakdown">
+            <div class="fare-row">
+              <span>All-In Base Fare (per seat)</span>
+              <strong id="summary-base-fare">₹0</strong>
+            </div>
+            <div class="fare-row">
+              <span>Selected Seat(s)</span>
+              <span class="selected-seats-badge" id="summary-selected-seats">None</span>
+            </div>
+            <div class="fare-row">
+              <span>Smart Discount</span>
+              <strong id="summary-discount-text" class="text-gold">0% (₹0)</strong>
+            </div>
+            <div class="fare-row">
+              <span>Taxes, Tolls &amp; ₹5L Insurance</span>
+              <strong class="text-green"><i class="fa-solid fa-circle-check"></i> Included (₹0 extra)</strong>
+            </div>
+            <div class="fare-divider"></div>
+            <div class="fare-row total">
+              <span>Total Payable</span>
+              <strong id="summary-total-fare">₹0</strong>
+            </div>
+          </div>
+
+          <!-- Passenger Details Form -->
+          <form id="passenger-checkout-form" onsubmit="proceedTo3TapCheckout(event)">
+            <div class="form-group">
+              <label><i class="fa-regular fa-user"></i> Primary Passenger Name</label>
+              <input type="text" id="passenger-name" placeholder="e.g. Neha Patil" required autocomplete="name">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label><i class="fa-solid fa-cake-candles"></i> Age</label>
+                <input type="number" id="passenger-age" min="1" max="110" placeholder="24" oninput="handleAgeChange()" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-venus-mars"></i> Gender</label>
+                <select id="passenger-gender" required>
+                  <option value="Female">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label><i class="fa-solid fa-phone"></i> Mobile Phone (for SMS Pass &amp; Tracking)</label>
+              <input type="tel" id="passenger-phone" placeholder="9876543210" pattern="[0-9]{10}" required autocomplete="tel">
+            </div>
+
+            <div class="form-group discount-select-box">
+              <label><i class="fa-solid fa-badge-percent text-gold"></i> Smart Discount Category</label>
+              <select id="passenger-category" onchange="updateFareSummary()">
+                <option value="GENERAL">General Traveler (Standard Fare)</option>
+                <option value="STUDENT">Student ID (15% Smart Discount)</option>
+                <option value="SENIOR">Senior Citizen 60+ (20% Smart Discount)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-checkout" id="btn-pay-confirm">
+              <span>Proceed to 3-Tap Checkout</span>
+              <i class="fa-solid fa-bolt"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: 3-TAP CHECKOUT & UPI PAYMENT DRAWER ================= -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-content checkout-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="modal-badge"><i class="fa-solid fa-lock text-gold"></i> Secure 3-Tap Checkout</span>
+          <h3>Instant Payment &amp; Confirmation</h3>
+          <p id="checkout-bus-name" class="subtext">Bus Name</p>
+        </div>
+        <button class="close-btn" onclick="closeCheckoutModal()" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="checkout-modal-body">
+        <!-- Tap 1: Identity / Auth Selection -->
+        <div class="checkout-step-block">
+          <div class="step-badge-title">
+            <span class="step-num">1</span>
+            <h4>Passenger Verification</h4>
+          </div>
+
+          <div class="auth-segmented-control">
+            <button type="button" class="auth-tab-btn active" id="tab-auth-guest" onclick="setAuthMode('guest')">
+              <i class="fa-solid fa-bolt"></i> 1-Tap Guest Booking
+            </button>
+            <button type="button" class="auth-tab-btn" id="tab-auth-otp" onclick="setAuthMode('otp')">
+              <i class="fa-solid fa-mobile-screen"></i> Instant Mobile OTP
+            </button>
+          </div>
+
+          <div id="guest-form-section" class="auth-readout-card">
+            <div>
+              <span class="readout-label">Booking For:</span>
+              <strong id="checkout-passenger-text">Neha Patil (24 yrs, Female) • 9876543210</strong>
+            </div>
+            <div>
+              <span class="readout-label">Reserved Seat(s):</span>
+              <span class="seat-badge-pill" id="checkout-seats-text">#03, #04</span>
+            </div>
+            <span id="otp-badge-verified" class="verified-badge-pill" style="display: none;">
+              <i class="fa-solid fa-circle-check"></i> VIP SmartRider Verified
+            </span>
+          </div>
+
+          <div id="otp-login-section" class="otp-box-section" style="display: none;">
+            <p class="otp-hint-text">Enter your mobile number to load your saved profile and earn 50 SmartCoins:</p>
+            <div class="otp-phone-row">
+              <input type="tel" id="otp-phone-input" placeholder="Enter 10-digit mobile" maxlength="10">
+              <button type="button" class="btn-primary btn-sm" id="btn-send-otp" onclick="sendMockOtp()">Send OTP</button>
+            </div>
+            <div class="otp-verify-row" id="otp-input-group" style="display: none;">
+              <input type="text" id="otp-code-input" placeholder="Enter 4-digit OTP (demo: 4829)" maxlength="4">
+              <button type="button" class="btn-primary btn-sm" onclick="verifyMockOtp()">Verify</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3: Luxury Journey Add-Ons (Meal & Blanket Pre-Order) -->
+        <div class="checkout-step-block">
+          <div class="step-badge-title">
+            <span class="step-num"><i class="fa-solid fa-crown text-gold" style="font-size: 11px;"></i></span>
+            <h4>Luxury Add-Ons Pre-Order (Seat Delivery)</h4>
+          </div>
+          <p class="addons-subtext">Pre-order chef-crafted hot meals, sealed sanitized bedding &amp; refreshments:</p>
+
+          <div class="checkout-addons-grid">
+            <div class="addon-card" id="addon-meal" onclick="toggleAddon('meal', 160)">
+              <div class="addon-check-icon"><i class="fa-solid fa-check"></i></div>
+              <div class="addon-icon">🍱</div>
+              <div class="addon-info">
+                <strong>Gourmet Bento Hot Meal</strong>
+                <small>Fresh Paneer Dum Biryani / Royal Veg Thali</small>
+              </div>
+              <span class="addon-price">+₹160</span>
+            </div>
+
+            <div class="addon-card" id="addon-blanket" onclick="toggleAddon('blanket', 90)">
+              <div class="addon-check-icon"><i class="fa-solid fa-check"></i></div>
+              <div class="addon-icon">🧣</div>
+              <div class="addon-info">
+                <strong>Sanitized Blanket &amp; Pillow</strong>
+                <small>Thermal fleece blanket + memory neck pillow</small>
+              </div>
+              <span class="addon-price">+₹90</span>
+            </div>
+
+            <div class="addon-card" id="addon-coffee" onclick="toggleAddon('coffee', 60)">
+              <div class="addon-check-icon"><i class="fa-solid fa-check"></i></div>
+              <div class="addon-icon">☕</div>
+              <div class="addon-info">
+                <strong>Filter Coffee / Ginger Chai</strong>
+                <small>Freshly brewed hot beverage at lounge halt</small>
+              </div>
+              <span class="addon-price">+₹60</span>
+            </div>
+
+            <div class="addon-card" id="addon-water" onclick="toggleAddon('water', 25)">
+              <div class="addon-check-icon"><i class="fa-solid fa-check"></i></div>
+              <div class="addon-icon">💧</div>
+              <div class="addon-info">
+                <strong>Himalayan Spring Water (1L)</strong>
+                <small>Natural chilled mineral water bottle</small>
+              </div>
+              <span class="addon-price">+₹25</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tap 2: All-In Fare Breakdown & UPI Drawer -->
+        <div class="checkout-step-block">
+          <div class="step-badge-title">
+            <span class="step-num">2</span>
+            <h4>All-In Price &amp; Instant UPI</h4>
+          </div>
+
+          <div class="transparent-fare-box">
+            <div class="trans-row"><span>Base Bus Fare</span> <strong id="checkout-base-amount">₹0</strong></div>
+            <div class="trans-row"><span>Smart Category Discount</span> <strong id="checkout-discount-amount" class="text-gold">-₹0</strong></div>
+            <div class="trans-row"><span>Luxury Pre-Ordered Add-Ons</span> <strong id="checkout-addons-amount" class="text-gold">+₹0</strong></div>
+            <div class="trans-row"><span>State Highway Toll &amp; Green Cess</span> <span>Included (₹0)</span></div>
+            <div class="trans-row"><span>Passenger Accident Cover (₹5 Lakh)</span> <span class="text-green">Complimentary (₹0)</span></div>
+            <div class="trans-row"><span>Convenience Surcharges</span> <span class="text-green">₹0 (Guaranteed)</span></div>
+            <div class="trans-divider"></div>
+            <div class="trans-row total-highlight">
+              <span>Final All-In Payable:</span>
+              <strong id="checkout-final-payable">₹0</strong>
+            </div>
+          </div>
+
+          <div class="upi-apps-grid">
+            <div class="upi-app-card active" id="upi-gpay" onclick="selectUpiApp('gpay')">
+              <i class="fa-brands fa-google-pay upi-icon"></i>
+              <span>Google Pay</span>
+            </div>
+            <div class="upi-app-card" id="upi-phonepe" onclick="selectUpiApp('phonepe')">
+              <i class="fa-solid fa-mobile-retro upi-icon"></i>
+              <span>PhonePe</span>
+            </div>
+            <div class="upi-app-card" id="upi-paytm" onclick="selectUpiApp('paytm')">
+              <i class="fa-solid fa-wallet upi-icon"></i>
+              <span>Paytm UPI</span>
+            </div>
+            <div class="upi-app-card" id="upi-bhim" onclick="selectUpiApp('bhim')">
+              <i class="fa-solid fa-building-columns upi-icon"></i>
+              <span>BHIM UPI</span>
+            </div>
+            <div class="upi-app-card" id="upi-custom" onclick="selectUpiApp('custom')">
+              <i class="fa-solid fa-at upi-icon"></i>
+              <span>UPI ID</span>
+            </div>
+          </div>
+
+          <div id="custom-upi-input-group" style="display: none; margin-top: 12px;">
+            <input type="text" id="custom-upi-id" placeholder="e.g. mobile@okaxis / user@paytm" class="custom-upi-field">
+          </div>
+        </div>
+
+        <!-- Tap 3: Pay & Confirm Action -->
+        <div class="checkout-step-block tap3-action-wrap">
+          <button type="button" class="btn-execute-upi" id="btn-execute-upi" onclick="executeUpiPayment()">
+            <span id="btn-upi-pay-text">Pay via UPI</span>
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+          <div class="security-lock-text">
+            <i class="fa-solid fa-lock text-gold"></i> 256-Bit NPCI Encrypted Direct Bank Settlement
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: VERIFIED BUS PROFILE & RIDER REVIEWS ================= -->
+  <div id="profile-modal" class="modal">
+    <div class="modal-content profile-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="modal-badge"><i class="fa-solid fa-circle-check text-gold"></i> Verified Bus Profile</span>
+          <h3 id="profile-bus-title">Bus Name</h3>
+          <p id="profile-bus-sub" class="subtext">Operator &amp; Route details</p>
+        </div>
+        <button class="close-btn" onclick="closeBusProfileModal()" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="profile-modal-body">
+        <div class="gallery-section">
+          <h4><i class="fa-solid fa-images text-gold"></i> Real Coach Photos</h4>
+          <div id="profile-photo-gallery" class="profile-photo-grid"></div>
+        </div>
+
+        <div class="profile-scores-grid">
+          <div class="score-card">
+            <span class="score-label">Comfort &amp; Recline</span>
+            <strong id="score-comfort" class="score-val">9.8/10</strong>
+          </div>
+          <div class="score-card">
+            <span class="score-label">Express Punctuality</span>
+            <strong id="score-punctuality" class="score-val">4.9/5</strong>
+          </div>
+          <div class="score-card">
+            <span class="score-label">Sanitization &amp; Hygiene</span>
+            <strong id="score-cleanliness" class="score-val">4.9/5</strong>
+          </div>
+          <div class="score-card">
+            <span class="score-label">Women Safety Index</span>
+            <strong id="score-safety" class="score-val text-gold">4.95/5</strong>
+          </div>
+        </div>
+
+        <div class="profile-reviews-section">
+          <h4><i class="fa-solid fa-comment-dots text-gold"></i> Verified Rider Reviews</h4>
+          <div id="profile-reviews-list" class="profile-reviews-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: GOLD DIGITAL BOARDING PASS ================= -->
+  <div id="ticket-modal" class="modal">
+    <div class="modal-content ticket-modal-content">
+      <button class="close-btn modal-pass-close" onclick="closeTicketModal()" aria-label="Close modal">&times;</button>
+      
+      <div id="ticket-printable-card" class="boarding-pass"></div>
+
+      <div class="ticket-actions">
+        <button class="btn-primary" onclick="printTicket()">
+          <i class="fa-solid fa-print"></i> Print / Download PDF
+        </button>
+        <button class="btn-outline" onclick="closeTicketModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ADD BUS (ADMIN) ================= -->
+  <div id="add-bus-modal" class="modal">
+    <div class="modal-content" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <h3>Add New Fleet Bus Route</h3>
+          <p class="subtext">Configure departure schedule, seat inventory, and base fare</p>
+        </div>
+        <button class="close-btn" onclick="closeAddBusModal()" aria-label="Close">&times;</button>
+      </div>
+
+      <form onsubmit="handleAddNewBus(event)" style="padding: 24px;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bus Coach ID</label>
+            <input type="text" id="new-bus-id" placeholder="BUS-121" required>
+          </div>
+          <div class="form-group">
+            <label>Bus / Operator Name</label>
+            <input type="text" id="new-bus-name" placeholder="Shivaji Maharaja Superfast" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Source City</label>
+            <input type="text" id="new-bus-src" placeholder="Pune" required>
+          </div>
+          <div class="form-group">
+            <label>Destination City</label>
+            <input type="text" id="new-bus-dest" placeholder="Goa" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Departure Time</label>
+            <input type="text" id="new-bus-dep" placeholder="09:00 PM" required>
+          </div>
+          <div class="form-group">
+            <label>Arrival Time</label>
+            <input type="text" id="new-bus-arr" placeholder="07:00 AM" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Coach Classification</label>
+            <select id="new-bus-type">
+              <option value="AC Volvo">AC Volvo</option>
+              <option value="AC Sleeper">AC Sleeper</option>
+              <option value="Multi-Axle AC">Multi-Axle AC</option>
+              <option value="Non-AC Seater">Non-AC Seater</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>All-In Fare (₹)</label>
+            <input type="number" id="new-bus-fare" placeholder="850" required min="50">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary full-width" style="margin-top: 10px; padding: 14px;">
+          <i class="fa-solid fa-plus-circle"></i> Create &amp; Schedule Route
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= PHASE 3 MODAL: LOYALTY CLUB & SMARTCOINS ================= -->
+  <div id="loyalty-modal" class="modal">
+    <div class="modal-content loyalty-modal-content">
+      <div class="modal-header">
+        <div class="loyalty-header-title">
+          <div class="loyalty-crown-badge"><i class="fa-solid fa-crown"></i></div>
+          <div>
+            <span class="modal-badge"><i class="fa-solid fa-gem text-gold"></i> SmartBus Royal Privilege</span>
+            <h3>SmartBus Royal Loyalty Club</h3>
+            <p class="subtext">Earn SmartCoins on every journey &amp; unlock VIP perks</p>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeLoyaltyModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="loyalty-modal-body">
+        <!-- Current Tier & SmartCoins Hero Card -->
+        <div class="loyalty-balance-card">
+          <div class="loyalty-balance-info">
+            <span class="balance-tag">ACTIVE STATUS</span>
+            <h2 class="tier-name-glow"><i class="fa-solid fa-crown text-gold"></i> PLATINUM ROYAL</h2>
+            <p>Member since Jan 2026 • Top 1% Frequent Intercity Traveler</p>
+          </div>
+          <div class="loyalty-coins-box">
+            <span class="coins-label">AVAILABLE SMARTCOINS</span>
+            <div class="coins-number-wrap">
+              <i class="fa-solid fa-coins text-gold"></i>
+              <span id="loyalty-current-coins-display" class="coins-val">250</span>
+            </div>
+            <button type="button" class="btn-redeem-coins" onclick="redeemSmartCoins()">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+              <span>Redeem 100 Coins for ₹100 Cash</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tier Comparison Matrix -->
+        <h4 class="tiers-section-title"><i class="fa-solid fa-layer-group text-gold"></i> Membership Tiers &amp; Privileges</h4>
+        <div class="loyalty-tiers-grid">
+          <!-- Silver Tier -->
+          <div class="tier-card silver">
+            <div class="tier-card-header">
+              <div class="tier-badge-icon"><i class="fa-solid fa-shield"></i></div>
+              <div>
+                <h5>SILVER TIER</h5>
+                <small>0 - 99 Coins</small>
+              </div>
+            </div>
+            <ul class="tier-perks-list">
+              <li><i class="fa-solid fa-check"></i> 10 SmartCoins per ₹100 spent</li>
+              <li><i class="fa-solid fa-check"></i> Standard Seat Selection</li>
+              <li><i class="fa-solid fa-check"></i> 5% discount on onboard snacks</li>
+            </ul>
+          </div>
+
+          <!-- Gold Tier -->
+          <div class="tier-card gold">
+            <div class="tier-card-header">
+              <div class="tier-badge-icon"><i class="fa-solid fa-medal"></i></div>
+              <div>
+                <h5>GOLD ELITE</h5>
+                <small>100 - 249 Coins</small>
+              </div>
+            </div>
+            <ul class="tier-perks-list">
+              <li><i class="fa-solid fa-check"></i> 15 SmartCoins per ₹100 spent</li>
+              <li><i class="fa-solid fa-check"></i> Free Himalayan Mineral Water</li>
+              <li><i class="fa-solid fa-check"></i> 10% off Bento Meals</li>
+              <li><i class="fa-solid fa-check"></i> Priority SOS Dispatch</li>
+            </ul>
+          </div>
+
+          <!-- Platinum Royal Tier -->
+          <div class="tier-card platinum active-tier">
+            <div class="active-tier-tag">CURRENT TIER</div>
+            <div class="tier-card-header">
+              <div class="tier-badge-icon"><i class="fa-solid fa-crown"></i></div>
+              <div>
+                <h5>PLATINUM ROYAL</h5>
+                <small>250+ Coins</small>
+              </div>
+            </div>
+            <ul class="tier-perks-list">
+              <li><i class="fa-solid fa-check"></i> 25 SmartCoins per ₹100 spent</li>
+              <li><i class="fa-solid fa-check"></i> <strong>1 Coin = ₹1 Instant Cash Redemption</strong></li>
+              <li><i class="fa-solid fa-check"></i> Free Premium Sealed Bedding Kit</li>
+              <li><i class="fa-solid fa-check"></i> VIP Executive Lounge Access</li>
+              <li><i class="fa-solid fa-check"></i> Zero Cancellation Convenience Fee</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PHASE 3 MODAL: PRICE-DROP TRACKER ================= -->
+  <div id="price-drop-modal" class="modal">
+    <div class="modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <span class="modal-badge"><i class="fa-solid fa-chart-line-down text-gold"></i> Smart Fare Watchdog</span>
+          <h3>Track Price Drops</h3>
+          <p class="subtext">Route: <strong id="price-drop-route-title" style="color: var(--gold-light);">Pune ➔ Mumbai</strong></p>
+        </div>
+        <button class="close-btn" onclick="closePriceDropModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form onsubmit="subscribePriceDropAlert(event)" style="padding: 24px;">
+        <p style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 18px; line-height: 1.5;">
+          Our AI continuously monitors dynamic seat yields. We'll automatically ping you the moment any verified coach drops below your target fare.
+        </p>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label><i class="fa-solid fa-indian-rupee-sign text-gold"></i> Target Fare Alert Threshold (₹)</label>
+          <input type="number" id="price-drop-target-fare" placeholder="e.g. 450" required min="100" style="padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-main); width: 100%;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label><i class="fa-solid fa-envelope text-gold"></i> WhatsApp / Email for Instant Alert</label>
+          <input type="text" id="price-drop-contact-input" placeholder="e.g. 9876543210 or user@example.com" required style="padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-main); width: 100%;">
+        </div>
+
+        <button type="submit" class="btn-primary full-width" style="padding: 14px; font-weight: 700;">
+          <i class="fa-solid fa-bell"></i>
+          <span>Activate Price-Drop Alert</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Luxury Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo footer-logo">
+          <div class="logo-icon-wrap"><i class="fa-solid fa-bus-simple"></i></div>
+          <span>Smart<strong>Bus</strong></span>
+        </div>
+        <p>India's premier luxury intercity coach network. Pioneering live satellite tracking, all-in transparent pricing, 24x7 SOS emergency protocol, and on-time guarantee.</p>
+      </div>
+
+      <div class="footer-badges">
+        <div class="badge-item"><i class="fa-solid fa-satellite-dish text-gold"></i> Live Satellite Telemetry</div>
+        <div class="badge-item"><i class="fa-solid fa-award text-gold"></i> On-Time Guarantee Protected</div>
+        <div class="badge-item"><i class="fa-solid fa-shield-heart" style="color: #fb7185;"></i> Women-Safe Verified</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartBus Go Luxury Technologies Pvt. Ltd. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
